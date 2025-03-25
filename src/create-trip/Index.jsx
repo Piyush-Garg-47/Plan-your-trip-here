@@ -3,7 +3,7 @@ import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 const CreateTrip = () => {
   return (
-    <div className="sm:px-10 md:px-32 lg:56 xl:px-72 px-5 mt-10">
+    <div className="sm:px-10 md:px-32 lg:56 xl:px-72 px-5 mt-10 ">
       <h2 className="font-bold text-3xl">
         Tell us your travel preferences 🏕️🌴
       </h2>
@@ -17,7 +17,7 @@ const CreateTrip = () => {
           <h2 className="text-xl my-3 font-medium">What is destination of choice ?</h2>
 
           <GooglePlacesAutocomplete 
-           apiKey=" "
+           apiKey={import.meta.env.VITE_GEOAPIFY_API_KEY}
           />
         </div>
       </div>
