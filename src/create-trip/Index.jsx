@@ -1,12 +1,28 @@
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
+import { useEffect } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { SelectBudgetOptions  , SelectTravelesList} from "@/constants/Options";
 
 const CreateTrip = () => {
   const [place, setPlace] = useState();
+  
+  const [formData, setFormData] = useState([])
+
+  const handleInputChange =(name , value) =>{
+         setFormData({
+          ...formData , 
+          [name] : value 
+         })
+  }
+
+  useEffect(() => {
+      console.log(formData);  
+  }, [formData])
+  
+
+
   return (
     <div className="sm:px-10 md:px-32 lg:56 xl:px-72 px-5 mt-10 ">
       <h2 className="font-bold text-3xl">
@@ -24,12 +40,12 @@ const CreateTrip = () => {
           </h2>
 
           <GooglePlacesAutocomplete
-            apiKey={import.meta.env.VITE_GEOAPIFY_API_KEY}
+            apiKey={ import.meta.env.VITE_GEOAPIFY_API_KEY}
+            
             selectProps={{
               place,
               onChange: (v) => {
-                setPlace(v);
-                console.log(v);
+                setPlace(v) ; handleInputChange("location" , v) ; 
               },
             }}
           />
@@ -40,7 +56,9 @@ const CreateTrip = () => {
             How many days are you planning your trip ?
           </h2>
 
-          <Input placeholder="Ex -3" type="number" />
+          <Input placeholder="Ex -3" type="number" 
+          onChange={(e) =>handleInputChange('noOfDays' , e.target.value)}
+           />
         </div>
 
         <div>
@@ -49,7 +67,9 @@ const CreateTrip = () => {
             {SelectBudgetOptions.map((item, index) => (
               <div
                 key={index}
-                className="p-4 border rounded-lg  hover:shadow-lg cursor-pointer"
+                onClick={()=> handleInputChange('budget' , item.title)}
+                className={`p-4 border rounded-lg  hover:shadow-lg cursor-pointer
+                   ${formData ?.budget == item.title && 'shadow-lg border-black'}`}
               >
                 <h2 className="text-4xl">{item.icons}</h2>
                 <h2 className="font-bold text-lg">{item.title}</h2>
@@ -65,7 +85,9 @@ const CreateTrip = () => {
             {SelectTravelesList.map((item, index) => (
               <div
                 key={item.id}
-                className="p-4 border rounded-lg  hover:shadow-lg cursor-pointer"
+                onClick={()=> handleInputChange('travelers' , item.people)}
+                className={`p-4 border rounded-lg  hover:shadow-lg cursor-pointer
+                  ${formData ?.travelers == item.people && 'shadow-lg border-black'}`}
               >
                 <h2 className="text-4xl">{item.icons}</h2>
                 <h2 className="font-bold text-lg">{item.title}</h2>
