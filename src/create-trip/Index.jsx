@@ -3,25 +3,52 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
-import { SelectBudgetOptions  , SelectTravelesList} from "@/constants/Options";
+import {
+  AI_PROMPT,
+  SelectBudgetOptions,
+  SelectTravelesList,
+} from "@/constants/Options";
+import { chatSession } from "@/service/AiModel";
 
 const CreateTrip = () => {
   const [place, setPlace] = useState();
-  
-  const [formData, setFormData] = useState([])
 
-  const handleInputChange =(name , value) =>{
-         setFormData({
-          ...formData , 
-          [name] : value 
-         })
-  }
+  const [formData, setFormData] = useState([]);
+
+  const handleInputChange = (name, value) => {
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   useEffect(() => {
-      console.log(formData);  
-  }, [formData])
-  
+    console.log(formData);
+  }, [formData]);
 
+  const onGenerateTrip =async () => {
+    if (
+      (formData?.noOfDays > 5 && !formData?.location) ||
+      !formData?.budget ||
+      !formData?.travelers
+    ) {
+      toast("Please fill all the deatails !!");
+      return;
+    }
+    const FINAL_PROMPT = AI_PROMPT.replace(
+      "{location}",
+      formData?.location?.label
+    )
+      .replace("{totalDays}", formData?.noOfDays)
+      .replace("{traveler}", formData?.travelers)
+      .replace("{budget}", formData?.budget);
+
+      console.log(FINAL_PROMPT);
+
+      const result = await chatSession.sendMessage(FINAL_PROMPT);
+
+      console.log(result ?.response?.text());
+  };
 
   return (
     <div className="sm:px-10 md:px-32 lg:56 xl:px-72 px-5 mt-10 ">
@@ -40,12 +67,12 @@ const CreateTrip = () => {
           </h2>
 
           <GooglePlacesAutocomplete
-            apiKey={ import.meta.env.VITE_GEOAPIFY_API_KEY}
-            
+            apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
             selectProps={{
               place,
               onChange: (v) => {
-                setPlace(v) ; handleInputChange("location" , v) ; 
+                setPlace(v);
+                handleInputChange("location", v);
               },
             }}
           />
@@ -56,9 +83,11 @@ const CreateTrip = () => {
             How many days are you planning your trip ?
           </h2>
 
-          <Input placeholder="Ex -3" type="number" 
-          onChange={(e) =>handleInputChange('noOfDays' , e.target.value)}
-           />
+          <Input
+            placeholder="Ex -3"
+            type="number"
+            onChange={(e) => handleInputChange("noOfDays", e.target.value)}
+          />
         </div>
 
         <div>
@@ -67,9 +96,11 @@ const CreateTrip = () => {
             {SelectBudgetOptions.map((item, index) => (
               <div
                 key={index}
-                onClick={()=> handleInputChange('budget' , item.title)}
+                onClick={() => handleInputChange("budget", item.title)}
                 className={`p-4 border rounded-lg  hover:shadow-lg cursor-pointer
-                   ${formData ?.budget == item.title && 'shadow-lg border-black'}`}
+                   ${
+                     formData?.budget == item.title && "shadow-lg border-black"
+                   }`}
               >
                 <h2 className="text-4xl">{item.icons}</h2>
                 <h2 className="font-bold text-lg">{item.title}</h2>
@@ -80,14 +111,19 @@ const CreateTrip = () => {
         </div>
 
         <div>
-          <h2 className="text-xl my-3 font-medium">Who do you plan on traveling with on your next adventure ?</h2>
+          <h2 className="text-xl my-3 font-medium">
+            Who do you plan on traveling with on your next adventure ?
+          </h2>
           <div className="grid grid-cols-3 gap-5 mt-5 ">
             {SelectTravelesList.map((item, index) => (
               <div
                 key={item.id}
-                onClick={()=> handleInputChange('travelers' , item.people)}
+                onClick={() => handleInputChange("travelers", item.people)}
                 className={`p-4 border rounded-lg  hover:shadow-lg cursor-pointer
-                  ${formData ?.travelers == item.people && 'shadow-lg border-black'}`}
+                  ${
+                    formData?.travelers == item.people &&
+                    "shadow-lg border-black"
+                  }`}
               >
                 <h2 className="text-4xl">{item.icons}</h2>
                 <h2 className="font-bold text-lg">{item.title}</h2>
@@ -97,9 +133,9 @@ const CreateTrip = () => {
           </div>
         </div>
 
-         <div  className="my-10 justify-end flex">
-          <Button>Generate Trip</Button>
-         </div>
+        <div className="my-10 justify-end flex">
+          <Button onClick={onGenerateTrip}>Generate Trip</Button>
+        </div>
       </div>
     </div>
   );
