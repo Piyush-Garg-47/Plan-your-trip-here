@@ -21,6 +21,7 @@ import axios from "axios";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../service/firebaseConfig";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const CreateTrip = () => {
   const [place, setPlace] = useState();
@@ -28,6 +29,7 @@ const CreateTrip = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch user info from local storage on mount
   useEffect(() => {
@@ -78,11 +80,12 @@ const CreateTrip = () => {
 
     await setDoc(doc(db, "AiTrips", docId), {
       userSelection: formData,
-      tripData: TripData,
+      tripData: JSON.parse(TripData),
       userEmail: user?.email,
       id: user?.id,
     });
     setLoading(false);
+    navigate('/view-trip/'+ docId);
   };
 
   const onGenerateTrip = async () => {
