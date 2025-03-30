@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { Info } from 'lucide-react'
 import InfoSection from '../components/InfoSection.jsx' ; 
 import Hotels from '../components/Hotels.jsx' ;
+import PlacesToVisit from '../components/PlacesToVisit.jsx'
 
 
 const ViewTrip = () => {
@@ -41,6 +42,9 @@ const ViewTrip = () => {
 
         {/* Recomended Hotels */}
         <Hotels trip={trip}/>
+
+        {/* Daily Plans */}
+        <PlacesToVisit trip={trip}/>
 
     </div>
   )

@@ -28,7 +28,7 @@ const CreateTrip = () => {
   const [formData, setFormData] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading , setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Fetch user info from local storage on mount
