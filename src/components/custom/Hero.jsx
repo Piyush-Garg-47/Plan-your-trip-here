@@ -12,9 +12,10 @@ const Hero = () => {
         <Link to={'/create-trip'}>
         <Button>Get Started , it's Free</Button>
         </Link>
+
       <img src="/exp.jpg" className='-mt-20 w-full' />
     </div>
   )
 }
 
-export default Hero
+export default Hero ;
