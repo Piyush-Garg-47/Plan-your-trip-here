@@ -7,6 +7,7 @@ import { Info } from 'lucide-react'
 import InfoSection from '../components/InfoSection.jsx' ; 
 import Hotels from '../components/Hotels.jsx' ;
 import PlacesToVisit from '../components/PlacesToVisit.jsx'
+import Footer from '../components/Footer.jsx'
 
 
 const ViewTrip = () => {
@@ -46,6 +47,9 @@ const ViewTrip = () => {
         {/* Daily Plans */}
         <PlacesToVisit trip={trip}/>
 
+        {/* Footer */}
+        
+        <Footer />
     </div>
   )
 }
